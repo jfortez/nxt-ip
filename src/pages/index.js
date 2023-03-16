@@ -1,11 +1,23 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import styles from "@/styles/Home.module.css";
+import requestIp from "request-ip";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
+// get client ip address using request-ip
+// import requestIp from 'request-ip'
+// const clientIp = requestIp.getClientIp(req)
 
-export default function Home() {
+export async function getServerSideProps({ req, res }) {
+  const ip = requestIp.getClientIp(req);
+  return {
+    props: {
+      ip,
+    },
+  };
+}
+export default function Home({ ip }) {
   return (
     <>
       <Head>
@@ -16,17 +28,14 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.js</code>
-          </p>
+          <p>{ip}</p>
           <div>
             <a
               href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{' '}
+              By{" "}
               <Image
                 src="/vercel.svg"
                 alt="Vercel Logo"
@@ -49,13 +58,7 @@ export default function Home() {
             priority
           />
           <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
+            <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
           </div>
         </div>
 
@@ -112,12 +115,11 @@ export default function Home() {
               Deploy <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
+              Instantly deploy your Next.js site to a shareable URL with&nbsp;Vercel.
             </p>
           </a>
         </div>
       </main>
     </>
-  )
+  );
 }
